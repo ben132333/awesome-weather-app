@@ -1,94 +1,92 @@
-import Image from 'next/image'
+'use client';
+
 import styles from './page.module.css'
+import { useState, useEffect } from 'react';
+import WeatherCard from '../components/WeatherCard';
 
 export default function Home() {
+  const [city, setCity] = useState('');
+  const [weatherData, setWeatherData] = useState(null);
+
+  useEffect(() => {
+    const lastQuery = localStorage.getItem('lastQuery');
+    handleSearch(lastQuery);
+  }, []);
+
+  const storeSearch = async (city, res_data) => {
+    console.log('storeSearch res_data input:', res_data);
+    const currentTime = new Date(res_data.dt * 1000).toLocaleString();
+    const weatherString = JSON.stringify(res_data);
+    console.log('currentTime', currentTime);
+
+    const body = {
+      'city': city,
+      'currentTime': currentTime,
+      'weatherString': weatherString,
+    };
+    console.log('body', body);
+
+    const res_post = await fetch('/api/search', {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return res_post;
+  };
+
+  const getSearches = async () => {
+    const userSearches = await fetch('/api/search', {
+      method: 'GET',
+    }).then((res) => res.json());
+    console.log('userSearches', userSearches);
+
+    return userSearches;
+  }
+
+  const handleSearch = async (city) => {
+    let res = await fetch(`/api/getweather/${city}`, {
+      method: 'GET',
+    }
+    );
+    let res_data = await res.json();
+    console.log('res_data_api', res_data);
+
+    setWeatherData(res_data);
+
+    const res_post_data = await storeSearch(city, res_data);
+
+    localStorage.setItem('lastQuery', city);
+
+    const userSearches = await fetch('/api/search', {
+      method: 'GET',
+    }).then((res) => res.json());
+    console.log('userSearches', userSearches);
+
+    return userSearches
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <h1 className={styles.title}> Amazing Weather App </h1>
+      
+      <div>
+        <input 
+          type="text" 
+          placeholder="Enter city name" 
+          onChange={(e) => setCity(e.target.value)}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        
+          <button 
+            onClick={() => handleSearch(city)}
+          >Search</button>
+          {weatherData && <WeatherCard weatherData={weatherData}/>}
+      
+      <h1 className={styles.title}> Previous Searches </h1>
+      {}
+      
       </div>
     </main>
   )

@@ -1,0 +1,22 @@
+/* WeatherCard.module.css */
+.weathercard {
+  background-color: #f7f7f7; /* Light grey background */
+  border: 1px solid #e0e0e0; /* Light grey border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Spacing inside the card */
+  max-width: 300px; /* Maximum width of the card */
+  margin: auto; /* Center the card */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  text-align: center; /* Center the text */
+}
+
+.weathercard h3 {
+  color: #333; /* Dark grey for the city name */
+  margin-bottom: 10px; /* Spacing after the city name */
+}
+
+.weathercard p {
+  color: #666; /* Medium grey for the text */
+  line-height: 1.5; /* Line spacing */
+  margin-bottom: 5px; /* Spacing between paragraphs */
+}

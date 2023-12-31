@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Awesome Weather App
+
+## The setup
+
+I used Nextjs version 14.0.4 and node version 20.10.0
+
+I used Neon as a Postregs sql database. Prisma serves as an ORM. The database schema is visible in `prisma/schema.prisma`. Prisma provides CRUD operations for the database. 
 
 ## Getting Started
 
-First, run the development server:
-
+To run the app locally, you need to install the dependencies and run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The .env file contains (the API_KEY is from OpenWeatherMap):
+```
+API_KEY=
+GITHUB_ID=
+GITHUB_SECRET=
+NEXTAUTH_SECRET=
+DATABASE_URL=
+SHADOW_DATABASE_URL=
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Project
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- I defined the API endpoints in app/api. It is handy for development purposes. To further decouple the client-server relationship, I would create a separate repository for the server (using express for example).
 
-## Learn More
+- I used next-auth to handle user authentication. Since 100% of my target audience has GitHub, I used github as the authentication provider. I would add more providers in a production environment.
+    - Note: I used a callback in authOptions to add the GitHub userId to the session at login. The email was not as readily available. If I'd add other login providers, I look deeper into it so email is abailable in the session. It is available in the signIn callback profile variable. I would either store it from there or I'd look into the GitHub App permissions. 
 
-To learn more about Next.js, take a look at the following resources:
+- You can look up a city and get the weather. The data source is https://openweathermap.org/. I defined an APi wrapper in app/api/getweather/route.jsx. Searches are saved in the database. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Through the app/api/search/route.jsx endpoint, you can get the search history for the logged in user. To display these previous searches I can map over the data and display it in WeatherCards. Due to time limit I did not implement this.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- CRUD functionality is set up and every user search is saved for a logged in user. So a query through prisma can be made to count the number of searches per month. 
 
-## Deploy on Vercel
+- The API endpoints can implement a rate limiter. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- app/admin/page.jsx is a page that displays all users and all searches. Currenly every user can access this page, for development purposes. In a production environment, I would add an "admin" role to the User and only allow admins to access this page.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- The data on the admin page can only be viewed, not edited.
+
+- I would add a backend test by testing one API endpoint. Test if it handles different data correclty.
