@@ -52,6 +52,7 @@ export default function Home() {
   const handleSearchClick = async (city) => {    
     let res = await fetch(`/api/getweather/${city}`, {
       method: 'GET',
+      next: { revalidate: 1200 },
     }
     );
     let res_data = await res.json();

@@ -15,11 +15,11 @@ export async function GET(request, { params }) {
 
     const response_data = await fetch(openWeatherUrl, { 
         method: 'GET',
-        next: { revalidate: 1000 },
+        next: { revalidate: 1200 },
     })
 
     const response_data_json = await response_data.json();
     console.log('response data:', response_data_json);
 
-    return Response.json(response_data_json);
+    return NextResponse.json(response_data_json);
 };
