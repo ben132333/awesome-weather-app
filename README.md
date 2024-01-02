@@ -37,7 +37,7 @@ SHADOW_DATABASE_URL=
 
 - You can look up a city and get the weather. The data source is https://openweathermap.org/. I defined an APi wrapper in app/api/getweather/route.jsx. Searches are saved in the database. 
 
-- Every logged in user can see their previous on their user page: '/user'. They reach it by clicking on the image simbool when they are logged in. 
+- Every logged in user can see their previous searches on their user page: '/user'. They reach it by clicking on the profile image symbol when they are logged in. 
 
 - CRUD functionality is set up and every user search is saved for a logged in user. So a query through prisma can be made to count the number of searches per month. 
 
