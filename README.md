@@ -23,6 +23,11 @@ DATABASE_URL=
 SHADOW_DATABASE_URL=
 ```
 
+- To get an API_KEY, you need to create an account on https://openweathermap.org/ and create an API key.
+- To get a GITHUB_ID and GITHUB_SECRET, you need to create a GitHub App. You can do this here: https://github.com/settings/apps
+- You can generate a NEXTAUTH_SECRET here: https://generate-secret.vercel.app
+- The DATABASE_URL and SHADOW_DATABASE_URL are the urls to your database. I used a free Neon database. You can create a project with 2 databases here: https://console.neon.tech/app
+
 ## Project
 
 - I defined the API endpoints in app/api. It is handy for development purposes. To further decouple the client-server relationship, I would create a separate repository for the server (using express for example).
@@ -32,11 +37,11 @@ SHADOW_DATABASE_URL=
 
 - You can look up a city and get the weather. The data source is https://openweathermap.org/. I defined an APi wrapper in app/api/getweather/route.jsx. Searches are saved in the database. 
 
-- Through the app/api/search/route.jsx endpoint, you can get the search history for the logged in user. To display these previous searches I can map over the data and display it in WeatherCards. Due to time limit I did not implement this.
+- Every logged in user can see their previous on their user page: '/user'. They reach it by clicking on the image simbool when they are logged in. 
 
 - CRUD functionality is set up and every user search is saved for a logged in user. So a query through prisma can be made to count the number of searches per month. 
 
-- The API endpoints can implement a rate limiter. 
+- The API endpoints can implement a rate limiter (using a count query). This is not yet implemented.
 
 - app/admin/page.jsx is a page that displays all users and all searches. Currenly every user can access this page, for development purposes. In a production environment, I would add an "admin" role to the User and only allow admins to access this page.
 

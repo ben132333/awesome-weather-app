@@ -41,15 +41,9 @@ export default function Home() {
     return res_post;
   };
 
-  const getSearches = async () => {
-    const userSearches = await fetch('/api/search', {
-      method: 'GET',
-    }).then((res) => res.json());
-
-    return userSearches;
-  };
-
-  const handleSearchClick = async (city) => {    
+  const handleSearchClick = async (city) => {   
+    if (!city) return;
+    
     let res = await fetch(`/api/getweather/${city}`, {
       method: 'GET',
       next: { revalidate: 1200 },
@@ -81,10 +75,6 @@ export default function Home() {
           >Search</button>
           {/* TODO: if user is not signed out, display log in message */}
           {weatherData && <WeatherCard weatherData={weatherData}/>}
-    
-        
-          <h1 className={styles.title}> Previous Searches </h1>
-          {/* TODO: <PreviousSearches/> */}
         </AuthCheck>
       
       </div>

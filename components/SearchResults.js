@@ -18,7 +18,6 @@ const SearchResults = ({ searches }) => {
 
   return (
     <div>
-      <h1>Searches by Users</h1>
       <table>
         <thead>
           <tr>
