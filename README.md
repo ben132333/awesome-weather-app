@@ -30,21 +30,24 @@ SHADOW_DATABASE_URL=
 
 ## Project
 
-- I defined the API endpoints in app/api. It is handy for development purposes. To further decouple the client-server relationship, I would create a separate repository for the server (using express for example).
+Live app hosted on Vercel: https://awesome-weather-app-2hla.vercel.app/
 
-- I used next-auth to handle user authentication. Since 100% of my target audience has GitHub, I used github as the authentication provider. I would add more providers in a production environment.
-    - Note: I used a callback in authOptions to add the GitHub userId to the session at login. The email was not as readily available. If I'd add other login providers, I look deeper into it so email is abailable in the session. It is available in the signIn callback profile variable. I would either store it from there or I'd look into the GitHub App permissions. 
+- A user can look up a city and get the weather. The data source is https://openweathermap.org/. I defined an APi wrapper in app/api/getweather/route.jsx. Searches are saved in the database. Fetch requests are cached for 20 minutes. 
 
-- You can look up a city and get the weather. The data source is https://openweathermap.org/. I defined an APi wrapper in app/api/getweather/route.jsx. Searches are saved in the database. 
+- The user first registers as a user on the app. I used next-auth to handle the authentication. Since 100% of my target audience has GitHub, I used GitHub as the authentication provider. More providers can be added in the same way.
 
 - Every logged in user can see their previous searches on their user page: '/user'. They reach it by clicking on the profile image symbol when they are logged in. 
 
 - CRUD functionality is set up and every user search is saved for a logged in user. So a query through prisma can be made to count the number of searches per month. 
 
-- The API endpoints can implement a rate limiter (using a count query). This is not yet implemented.
+- I defined the API endpoints in app/api. It is handy for development purposes. To further decouple the client-server relationship, I would create a separate repository for the server (using express for example).
 
-- app/admin/page.jsx is a page that displays all users and all searches. Currenly every user can access this page, for development purposes. In a production environment, I would add an "admin" role to the User and only allow admins to access this page.
+- In the getWeather API endpoints a limit of 5 requests per city per day for a specific user can be implemented (using a count query). This is not yet done.
+
+- app/admin/page.jsx is a page that displays all users and all searches. Currenly, every registered user is an admin, for development purposes. In a production environment, I would add an "admin" role to the User and only allow admins to access this page.
 
 - The data on the admin page can only be viewed, not edited.
 
-- I would add a backend test by testing one API endpoint. Test if it handles different data correclty.
+- I would add a backend test by testing one API endpoint. Test if it handles different data correctly.
+
+- Note about authentication: I used a callback in authOptions to add the GitHub userId to the session at login. The email was not as readily available. If I'd add other login providers, I look deeper into it so email is abailable in the session. It is available in the signIn callback profile variable. I would either store it from there or I'd look into the GitHub App permissions. 
