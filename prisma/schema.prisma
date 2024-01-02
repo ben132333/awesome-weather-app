@@ -65,7 +65,7 @@ model VerificationToken {
 model Search {
   userId    String
   city      String
-  time      String
+  time      Int
   weather   String
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 

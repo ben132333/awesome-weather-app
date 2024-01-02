@@ -14,39 +14,37 @@ export async function POST(req) {
   const req_data = await req.json();
 
   const city = req_data.city?.toLowerCase();
-  const time = req_data.currentTime;
+  const time = parseInt(req_data.currentTime);
   const weather = req_data.weatherString;
-  console.log(req_data);
 
   if (!city || !time || !weather) {
     return NextResponse.json({"Error": "Missing data"}, { status: 400});
   }
-  // TODO: add validation for time and weather
+  // TODO: validate input data
 
-  const existingRecord = await prisma.search.findFirst({
+  let record = await prisma.search.findFirst({
     where: {
       userId: currentUserId,
       city: city,
-      time: time,
+      time: {
+        equals: time,
+      },
       weather: weather,
     },
   });
 
-  if (existingRecord) {
-    return NextResponse.json(existingRecord, { status: 200 });
+  if (!record) {
+    record = await prisma.search.create({
+      data: {
+        userId: currentUserId,
+        city: city,
+        time: time,
+        weather: weather,
+      },
+    });
   }
 
-  const record = await prisma.search.create({
-    data: {
-      userId: currentUserId,
-      city: city,
-      time: time,
-      weather: weather,
-    },
-  });
-
   return NextResponse.json(record, { status: 200 });
-
 }
 
 export async function GET(request) {
