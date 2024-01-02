@@ -36,7 +36,7 @@ Live app hosted on Vercel: https://awesome-weather-app-2hla.vercel.app/
 
 - The user first registers as a user on the app. I used next-auth to handle the authentication. Since 100% of my target audience has GitHub, I used GitHub as the authentication provider. More providers can be added in the same way.
 
-- Every logged in user can see their previous searches on their user page: '/user'. They reach it by clicking on the profile image symbol when they are logged in. 
+- Every logged in user can see their previous searches on their user page: '/users/[id]'. They reach it by clicking on the profile image symbol when they are logged in. 
 
 - CRUD functionality is set up and every user search is saved for a logged in user. So a query through prisma can be made to count the number of searches per month. 
 

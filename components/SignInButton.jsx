@@ -13,7 +13,7 @@ export function SignInButton() {
 
   if (status === 'authenticated') {
     return (
-      <Link href={`/user`}>
+      <Link href={`/users/${session?.user?.id}`}>
         <Image
           src={session.user?.image ?? '/mememan.webp'}
           width={32}

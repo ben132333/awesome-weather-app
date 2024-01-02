@@ -1,29 +1,24 @@
-// import FollowButton from '../components/FollowButton/FollowButton';
 import { prisma } from '@/lib/prisma';
-// import { Metadata } from 'next';
+import AuthCheck from '@/components/AuthCheck';
+import WeatherCard from '@/components/WeatherCard';
 
-export async function generateMetadata({ params }) {
-  const user = await prisma.user.findUnique({ where: { id: params.id } });
-  return { title: `User profile of ${user?.name}` };
-}
-
-export default async function UserProfile({ params }) {
-  const user = await prisma.user.findUnique({ where: { id: params.id } });
-  const { name, bio, image, id } = user ?? {};
+export default async function User({ userId }) {
+  const searches = await prisma.search.findMany({
+    where: {
+      userId: userId,
+    },
+  });
 
   return (
     <div>
-      <h1>{name}</h1>
+      <h1>User Page</h1>
 
-      <img
-        width={300}
-        src={image ?? '/mememan.webp'}
-        alt={`${name}'s profile`}
-      />
-
-      <h3>Bio</h3>
-      <p>{bio}</p>
-
+      <AuthCheck>
+        <h2>Previous Searches</h2>
+        {searches.map((search, index) => (
+          <WeatherCard key={index} weatherData={JSON.parse(search.weather)} />
+        ))}
+      </AuthCheck>
     </div>
   );
 }
